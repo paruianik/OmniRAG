@@ -1,0 +1,100 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.container{
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 6fr 5fr;
+    font-family: "Fuzzy Bubbles", sans-serif; 
+    font-weight: 400;
+    font-style: normal;
+} 
+
+.one{
+    height: 100%;
+    grid-row: 1/2;
+    grid-column: 1/2;
+    display: flex;
+    flex-direction: column;
+    background-color:rgb(0, 140, 255);
+    padding-left: 30px;
+    padding-top: 120px;
+    padding-right: 20px;
+}
+
+.two{
+    grid-row: 1/2;
+    grid-column: 2/3;
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+    padding-top: 140px;
+    gap: 40px;
+}
+
+.three{
+    font-size: 80px;
+    font-weight: 700;
+    padding-bottom: 80px;
+    color: white;
+}
+
+.four{
+    font-size: 30px;
+    font-weight: 400;
+    padding-top: 20px;
+    padding-right: 70px;
+    color: white;
+}
+
+.five{
+    font-size: 20px;
+}
+
+#six{
+    width: 500px;
+    height: 180px;
+    border: 3px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: scroll;
+    font-size: 16px;
+}
+
+#type{
+    width: 250px;
+    height: 40px;
+    font-size: 16px;
+}
+
+input[type="file"]::file-selector-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 150px;
+    font-size: 16px;          
+    cursor: pointer;
+}
+
+input{
+    width: 400px;
+    height: 30px;
+    font-size: 16px;
+}
+
+.submitbtn{
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}

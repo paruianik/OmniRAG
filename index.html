@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Project</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+    <div class = "container">
+        <div class = "box one">
+            <div class = "three">
+                Every Curiosity Finds an Answer
+            </div>
+            <div class = "four">
+                Upload any PDF, Image, Video, or URL and interact with your content through intelligent AI-powered question answering agent.”
+            </div>
+        </div>
+        <div class = "box two">
+            <form>
+                <div class = "five">
+                    <label for="type">Upload Type:</label>
+                    <br>
+                    <select name="upload_type" id="type">
+                        <option value="" disabled selected>--Choose a type--</option>
+                        <option value="PDF">PDF</option>
+                        <option value="Video">Video</option>
+                        <option value="Image">Image</option>
+                        <option value="URL">URL</option>
+                    </select>
+                </div>
+                <div class = "five" id = "fileSection">
+                    <label for="fileUpload" class = "loadfile">Click to Upload a File: </label>
+                    <br>
+                    <input type="file" id="fileUpload" accept=".pdf,.jpg,.png,.jpeg,.mp4 ">
+                </div>
+                <div class = "five" id = "urlSection" style = "display:none">
+                    <label for="urlinput">Enter URL: </label>
+                    <br>
+                    <input type="text" id = "urlinput" placeholder = "https://sample.com">
+                </div>
+                <div class = "five">
+                    <label for="question" class = "question">Type your Question: </label>
+                    <br>
+                    <input type="text" id = "question" name = "question">
+                    <button type = "submit" class = "submitbtn">Submit</button>
+                </div>
+            </form>
+            <div class = "five">
+                <label for="answer" class = "answer">Relevant Answer: </label>
+                <br>
+                <div id = "six">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.querySelector("form");
+        const typeSelect = document.getElementById("type");
+        const fileSection = document.getElementById("fileSection");
+        const urlSection = document.getElementById("urlSection"); 
+
+        typeSelect.addEventListener("change", function(){
+            if(typeSelect.value === "URL"){
+                fileSection.style.display = "none";
+                urlSection.style.display = "block";
+            }
+            else{
+                fileSection.style.display = "block";
+                urlSection.style.display = "none";
+            }
+        });
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const uploadType = document.getElementById("type").value;
+            const fileInput = document.getElementById("fileUpload");
+            const question = document.getElementById("question").value;
+            const urlInput = document.getElementById("urlinput").value;
+
+            // Basic validation
+            if (!uploadType) { alert("Please select an upload type"); return; }
+            if(uploadType === "URL"){
+                if(!urlInput){
+                    alert("Please enter a valid URL");
+                    return;
+                }
+            }
+            else{
+                if (!fileInput.files[0]) { alert("Please select a file"); return; }
+            }
+            if (!question) { alert("Please type a question"); return; }
+
+            // Show loading state
+            document.getElementById("six").innerText = "Loading... please wait (may take 30-60 seconds)";
+
+            const formData = new FormData();
+            formData.append("upload_type", uploadType);
+            formData.append("question", question);
+            if(uploadType === "URL"){
+                formData.append("url", urlInput);
+            }
+            else{
+                formData.append("file", fileInput.files[0]);
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/ask", {
+                    method: "POST",
+                    body: formData
+                });
+
+                console.log("Status:", response.status);  // Log status code
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    console.error("Server error:", errText);
+                    document.getElementById("six").innerText = "Server error: " + errText;
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("Response data:", data);  // Log full response
+
+                document.getElementById("six").innerText = data.answer ?? "No answer returned.";
+
+            } catch (err) {
+                console.error("Fetch error:", err);
+                document.getElementById("six").innerText = "Error: " + err.message;
+            }
+        });
+        </script>
+</body>
+</html>
